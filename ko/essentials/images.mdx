@@ -1,0 +1,45 @@
+---
+title: 이미지 및 임베드
+description: 이미지, 비디오 및 기타 HTML 요소 추가
+icon: image
+---
+
+<img style={{ borderRadius: '0.5rem' }} src="https://mintlify-assets.b-cdn.net/bigbend.jpg" />
+
+## 이미지
+
+### 마크다운 사용
+
+이 [마크다운 구문](https://www.markdownguide.org/basic-syntax/#images)을 사용하면 다음 코드로 이미지를 추가할 수 있습니다
+
+```md
+![title](/path/image.jpg)
+```
+
+이미지 파일 크기는 5MB 미만이어야 합니다. 그렇지 않으면 [Cloudinary](https://cloudinary.com/) 또는 [S3](https://aws.amazon.com/s3/)와 같은 서비스에 호스팅하는 것을 추천합니다. 그런 다음 해당 URL을 사용하여 임베드할 수 있습니다.
+
+### 임베드 사용
+
+이미지를 더 많이 사용자 정의하려면 [임베드](/writing-content/embed)를 사용하여 이미지를 추가할 수도 있습니다
+
+```html
+<img height="200" src="/path/image.jpg" />
+```
+
+## 임베드 및 HTML 요소
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/4KzFe50RQkQ" title="YouTube 비디오 플레이어" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen style={{ width: '100%', borderRadius: '0.5rem' }} />
+
+<br />
+
+<Tip>
+  Mintlify는 [마크다운에서 HTML 태그](https://www.markdownguide.org/basic-syntax/#html)를 지원합니다. 이는 마크다운 구문보다 HTML 태그를 선호하는 경우에 유용하며, 무한한 유연성으로 문서를 작성할 수 있게 해줍니다.
+</Tip>
+
+### iFrame
+
+문서 내에서 다른 HTML 페이지를 로드합니다. 주로 비디오를 임베드하는 데 사용됩니다.
+
+```html
+<iframe src="https://www.youtube.com/embed/4KzFe50RQkQ"> </iframe>
+```
