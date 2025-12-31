@@ -209,11 +209,47 @@ import PhotoCredits from '/snippets/photo-credits.mdx';
 ### Location
 
 Custom React components live in `/snippets/`:
+- `LocationMap.jsx` - OpenStreetMap embed with GPS coordinates
 - `ExpertDirectory.jsx` - Searchable expert directory
 - `ExpertFormSupabase.jsx` - Expert application form
 - `BusinessDirectory.jsx` - Business listing directory
 - `BusinessForm.jsx` - Business application form
 - `supabase.js` - Supabase client and constants
+
+### LocationMap Component
+
+Embeds an interactive OpenStreetMap for destinations with GPS coordinates:
+
+```mdx
+import LocationMap from '/snippets/LocationMap';
+
+<LocationMap
+  lat={-17.9243}
+  lng={25.8572}
+  zoom={14}
+  title="Victoria Falls"
+/>
+```
+
+**Props:**
+- `lat` (required): Latitude coordinate
+- `lng` (required): Longitude coordinate
+- `zoom`: Zoom level 1-18 (default: 12)
+- `title`: Location name for accessibility
+- `showMarker`: Show pin marker (default: true)
+- `height`: Map height (default: "400px")
+
+**Key Zimbabwe coordinates:**
+| Location | Latitude | Longitude |
+|----------|----------|-----------|
+| Victoria Falls | -17.9243 | 25.8572 |
+| Hwange NP (Main Camp) | -18.3667 | 26.5000 |
+| Great Zimbabwe | -20.2744 | 30.9339 |
+| Mana Pools | -15.7500 | 29.4000 |
+| Harare | -17.8292 | 31.0522 |
+| Bulawayo | -20.1325 | 28.5833 |
+| Lake Kariba | -16.5167 | 28.8000 |
+| Matobo Hills | -20.5000 | 28.5000 |
 
 ### Conventions
 
