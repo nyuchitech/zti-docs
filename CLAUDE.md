@@ -221,7 +221,7 @@ Custom React components live in `/snippets/`:
 Embeds an interactive OpenStreetMap for destinations with GPS coordinates:
 
 ```mdx
-import LocationMap from '/snippets/LocationMap';
+import { LocationMap } from '/snippets/LocationMap.jsx';
 
 <LocationMap
   lat={-17.9243}
@@ -253,11 +253,26 @@ import LocationMap from '/snippets/LocationMap';
 
 ### Conventions
 
-1. **Use client directive**: Add `'use client'` for client-side components
-2. **Dark mode**: Use Tailwind's `dark:` prefix for dark mode styles
-3. **Responsive**: Mobile-first with `sm:`, `md:`, `lg:` breakpoints
-4. **Accessibility**: Semantic HTML, ARIA labels, keyboard navigation
-5. **Error handling**: User-friendly messages with retry functionality
+1. **Arrow function syntax (REQUIRED)**: Mintlify requires arrow functions for JSX snippets:
+   ```jsx
+   // CORRECT - use arrow function with named export
+   export const MyComponent = ({ prop }) => {
+     return <div>{prop}</div>;
+   };
+
+   // WRONG - function declarations don't work in Mintlify
+   export default function MyComponent({ prop }) { ... }
+   ```
+2. **Named exports (REQUIRED)**: Use named exports, not default exports
+3. **Import with .jsx extension**: Always include the `.jsx` extension in imports:
+   ```mdx
+   import { MyComponent } from '/snippets/MyComponent.jsx';
+   ```
+4. **Use client directive**: Add `'use client'` for client-side components
+5. **Dark mode**: Use Tailwind's `dark:` prefix for dark mode styles
+6. **Responsive**: Mobile-first with `sm:`, `md:`, `lg:` breakpoints
+7. **Accessibility**: Semantic HTML, ARIA labels, keyboard navigation
+8. **Error handling**: User-friendly messages with retry functionality
 
 ### Supabase Integration
 
