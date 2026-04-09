@@ -2,11 +2,25 @@
 
 ## Project Overview
 
-**Zimbabwe Travel Information** is a comprehensive travel documentation site built with [Mintlify](https://mintlify.com). It provides travel guides, destination information, and practical resources for visitors to Zimbabwe.
+**travel-info.co.zw** is the editorial and documentation layer of the **Zimbabwe Information Platform** — a Mintlify-powered docs site that serves as the SEO-heavy, Google-indexed content layer. Destination guides, safari planning articles, seasonal travel advice, professional profiles, and contributor-written content live here. Every other app in the ecosystem links here for detailed editorial content.
+
+This is a **monorepo root**. The `/apps` directory is reserved for the other platform apps:
+- `apps/` — business.mukoko.com (Next.js 15), travel.mukoko.com (Next.js 15), barstool.mukoko.com
 
 - **Live site:** https://travel-info.co.zw
 - **Repository:** https://github.com/nyuchitech/zti-docs
 - **License:** CC BY 4.0 (Creative Commons Attribution 4.0 International)
+
+### Platform context
+
+| App | Domain | Purpose |
+|-----|--------|---------|
+| **zti-docs** (this repo) | travel-info.co.zw | Editorial content, SEO layer |
+| business-mukoko | business.mukoko.com | Business directory, verification, profiles |
+| zti-app | travel.mukoko.com | Interactive MapLibre travel map |
+| barstool | barstool.mukoko.com | Nightlife discovery |
+
+All apps share **one database** (`mukoko_platform_cloud`, `tdcpuzqyoodrdsxldgsh`) and **one auth system** (Supabase Auth — shared Mukoko identity).
 
 ---
 
@@ -16,10 +30,21 @@
 |------------|---------|
 | **Mintlify** | Documentation platform and static site generator |
 | **MDX** | Markdown with JSX components for content |
-| **React** | Custom interactive components |
-| **Supabase** | Backend database for expert/business directories |
+| **React** | Custom interactive components in `/snippets` |
+| **Supabase** | `mukoko_platform_cloud` — shared platform database |
 | **Tailwind CSS** | Styling (via Mintlify + custom `style.css`) |
 | **GitHub Actions** | CI/CD workflows |
+
+### Supabase connection
+
+- **Project:** `mukoko_platform_cloud`
+- **Project ID:** `tdcpuzqyoodrdsxldgsh`
+- **URL:** `https://tdcpuzqyoodrdsxldgsh.supabase.co`
+- **Key type:** Publishable key (safe for client-side — protected by RLS)
+- **Env var:** `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- **Auth:** Supabase Auth (shared identity across all Mukoko apps)
+
+The old `supabase/schema.sql` is deprecated. Schema lives in the platform DB, not this repo.
 
 ---
 
@@ -208,13 +233,25 @@ import PhotoCredits from '/snippets/photo-credits.mdx';
 
 ### Location
 
-Custom React components live in `/snippets/`:
-- `LocationMap.jsx` - OpenStreetMap embed with GPS coordinates
-- `ExpertDirectory.jsx` - Searchable expert directory
-- `ExpertFormSupabase.jsx` - Expert application form
-- `BusinessDirectory.jsx` - Business listing directory
-- `BusinessForm.jsx` - Business application form
-- `supabase.js` - Supabase client and constants
+Custom React components live in `/snippets/`. All exported from `index.js`.
+
+| Component | Queries | Purpose |
+|-----------|---------|---------|
+| `ExpertDirectory.jsx` | `hospitality.professional` + `identity.person` | Searchable professional directory |
+| `BusinessDirectory.jsx` | `commerce.local_business` + `business.organization` + `places.places` | Business directory |
+| `ExpertFormSupabase.jsx` | `hospitality.professional_application` | Professional listing application form |
+| `BusinessForm.jsx` | `commerce.business_application` | Business listing application form |
+| `LocationMap.jsx` | Static lat/lng props | OpenStreetMap embed |
+| `VerificationBadge.jsx` | (static — tier prop) | Mineral-colored verification badge |
+| `ProfessionalCard.jsx` | `hospitality.professional` + `identity.person` | Inline profile card for articles |
+| `SeasonalInfo.jsx` | `places.seasonal_info` | Month-by-month visit conditions |
+| `EstablishmentGrid.jsx` | `hospitality.establishment` | Grid of lodges/restaurants at a place |
+| `ExperienceList.jsx` | `hospitality.experience` | Activities at a place |
+| `ReviewSummary.jsx` | `engagement.review` | Aggregate rating + recent reviews |
+| `ContentGapCTA.jsx` | `content.content_gap` | "Help improve this page" CTA |
+| `ContributorDashboard.jsx` | `content.content_gap` | Authenticated gap browser |
+| `ItineraryView.jsx` | `content.itinerary` + `content.itinerary_stop` | Day-by-day trip plan |
+| `supabase.js` | — | Supabase client + shared constants |
 
 ### LocationMap Component
 
@@ -276,12 +313,17 @@ import { LocationMap } from '/snippets/LocationMap.jsx';
 
 ### Supabase Integration
 
-Components connect to Supabase for:
-- Expert directory data (applications, approved listings)
-- Business directory data
-- Form submissions
+All components connect to `mukoko_platform_cloud` via `/snippets/supabase.js`.
 
-Connection configured in `/snippets/supabase.js`.
+Use `.schema('schema_name').from('table_name')` for non-public schemas:
+```js
+// Correct pattern for platform schemas
+const { data } = await supabase.schema('hospitality').from('professional').select(...)
+const { data } = await supabase.schema('places').from('seasonal_info').select(...)
+const { data } = await supabase.schema('content').from('content_gap').select(...)
+```
+
+The `supabase.js` exports: `supabase`, `verificationTiers`, `expertCategories`, `businessCategories`, `accommodationSubcategories`, `zimbabweRegions`.
 
 ---
 
